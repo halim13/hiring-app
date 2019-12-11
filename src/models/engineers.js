@@ -72,7 +72,11 @@ module.exports = {
   },
   getMessages: (id) => {
     return new Promise((resolve, reject) => {
-      conn.query('SELECT * FROM messages_to_engineers WHERE engineer_id = ?', id, (err, result) => {
+      conn.query(`SELECT companies.name, companies.description, companies.location, 
+            companies.logo, companies.no_contact, companies.email, messages_to_engineers.message
+          FROM companies JOIN messages_to_engineers 
+            ON companies.id = messages_to_engineers.company_id
+          WHERE messages_to_engineers.engineer_id = ?`, id, (err, result) => {
         if (!err) {
           resolve(result)
         } else {
