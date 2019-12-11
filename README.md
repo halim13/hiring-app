@@ -1,8 +1,8 @@
 # Hiring Channel App
 
-![GitHub repo size](https://img.shields.io/github/repo-size/halim13/README.md)
-![GitHub stars](https://img.shields.io/github/stars/scottydocs/README-template.md?style=social)
-![GitHub forks](https://img.shields.io/github/forks/scottydocs/README-template.md?style=social)
+![GitHub repo size](https://img.shields.io/github/repo-size/halim13/hiring-app)
+![GitHub stars](https://img.shields.io/github/stars/halim13/hiring-app?style=social)
+![GitHub forks](https://img.shields.io/github/forks/halim13/hiring-app?style=social)
 
 Hiring Channel App is a feature that allows Engineers and Company  to do communicate for looking/hiring jobs.
 
