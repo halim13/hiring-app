@@ -1,5 +1,3 @@
-const conn = require('../configs/db')
-
 module.exports = {
   getHome: () => {
     return new Promise((resolve, reject) => {

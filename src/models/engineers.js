@@ -2,25 +2,25 @@ const conn = require('../configs/db')
 
 module.exports = {
   getEngineers: (data) => {
-    return new Promise((resolve, reject) => {      
-      const by = data['by']
-      const search = data['search']
-      const order = data['order']
-      const page = data['page']
-      const limit = data['limit']
-      const sort = data['sort']
+    return new Promise((resolve, reject) => {
+      const by = data.by
+      const search = data.search
+      const order = data.order
+      const page = data.page
+      const limit = data.limit
+      const sort = data.sort
       let currentPage = parseInt(page)
       let prevPage
       let totalData
       let totalPage
       let nextPage
-      let searchPage = (currentPage * limit) - limit
-      let query = `SELECT * FROM engineers
-        where ${by} like '%${search}%' order by ${sort} ${order} limit ${searchPage}, ${limit}`
-      
-      let queryTotal = `SELECT COUNT(*) AS totalEngineers FROM engineers
-        where ${by} like '%${search}%'`
-      
+      const searchPage = (currentPage * limit) - limit
+      const query = `SELECT * FROM engineers
+      where ${by} like '%${search}%' order by ${sort} ${order} limit ${searchPage}, ${limit}`
+
+      const queryTotal = `SELECT COUNT(*) AS totalEngineers FROM engineers
+      where ${by} like '%${search}%'`
+
       conn.query(queryTotal, (err, result) => {
         if (!err) {
           totalData = result[0].totalEngineers
@@ -31,16 +31,16 @@ module.exports = {
 
       conn.query(query, (err, result) => {
         if (!err) {
-          totalPage = Math.ceil(totalData/limit)
-          if(page>totalPage){
+          totalPage = Math.ceil(totalData / limit)
+          if (page > totalPage) {
             prevPage = totalPage
-          }else if(page>1){
-            prevPage = page-1
-          }else{
+          } else if (page > 1) {
+            prevPage = page - 1
+          } else {
             currentPage = 1
             prevPage = null
           }
-          nextPage = page >= totalPage ? null : parseInt(page)+1
+          nextPage = page >= totalPage ? null : parseInt(page) + 1
           const dataPage = {
             prevPage,
             currentPage,
@@ -48,7 +48,7 @@ module.exports = {
             totalData,
             totalPage
           }
-          const results={
+          const results = {
             result,
             dataPage
           }

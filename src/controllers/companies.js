@@ -48,9 +48,16 @@ module.exports = {
       })
   },
   addCompany: (req, res) => {
+    const file = req.file
+    if(!file){
+      res.status(400).json({
+        status: 400,
+        error: true,
+        message: 'select an image'
+      })
+    }
     const {name,logo,location,description} = req.body
     const data={name,logo,location,description}
-    const file = req.file
     data['logo'] = file.filename
     companiesModels.addCompany(data)
     .then(result => {

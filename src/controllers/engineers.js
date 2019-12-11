@@ -53,7 +53,6 @@ module.exports = {
         let showcases = all['showcases']
         let pages = all['engineers']['dataPage']
         let engineersData = []
-        let count=0
         
         for(let i = 0; i < engineers.length; i++) {
           
@@ -94,15 +93,18 @@ module.exports = {
   getSingleEngineer: (req, res) => {
     const id = req.params.id
 
+    let all={}
+
     engineersModels.getSingleEngineer(id)
       .then(result => {
+        all.engineer = result
         const results=[{
           'status':200,
           'error':false,
           'message':'Success Get Single Data',
           'data':result
         }]
-        res.json(results)
+        // res.json(results)
       })
       .catch(err => {
         const results=[{
@@ -112,6 +114,47 @@ module.exports = {
         }]
         res.status(400).json(results)
         console.log(err)
+      })
+
+      showcasesModels.getShowcases()
+      .then(result => {
+        all.showcases = result
+        let engineers = all['engineer']
+        let showcases = all['showcases']
+        let engineersData = []
+        
+        for(let i = 0; i < engineers.length; i++) {
+          
+          let dataShowcases=[]
+          var dataEngineer = {
+            id : engineers[i]['id'],
+            name : engineers[i]['name'],
+            description : engineers[i]['description'],
+            skills : engineers[i]['skills'],
+            location : engineers[i]['location'],
+            date_of_birth : engineers[i]['date_of_birth'],
+            showcases : dataShowcases,
+            date_created : engineers[i]['date_created'],
+            date_updated : engineers[i]['date_updated'],
+          }
+          for(let j = 0; j < showcases.length; j++) {
+            if(engineers[i]['id']==showcases[j]['engineer_id']){
+              var dataShowcase = {
+                id:showcases[j]['id'],
+                name:showcases[j]['name'],
+                link:showcases[j]['link']
+              }
+              dataShowcases.push(dataShowcase)
+            }
+          }
+          engineersData.push(dataEngineer)
+        }
+
+        const getAll={
+          engineersData
+        }
+
+        res.json(getAll)
       })
   },
   addEngineer: (req, res) => {
