@@ -56,8 +56,8 @@ module.exports = {
         message: 'select an image'
       })
     }
-    const {name,logo,location,description} = req.body
-    const data={name,logo,location,description}
+    const {name,logo,location,description,no_contact,email} = req.body
+    const data={name,logo,location,description,no_contact,email}
     data['logo'] = file.filename
     companiesModels.addCompany(data)
     .then(result => {
@@ -81,12 +81,14 @@ module.exports = {
   },
   updateCompany: (req, res) => {
     const id = req.params.id
-    const { name, logo, location, description, old_logo } = req.body
+    const { name, logo, location, description, old_logo, no_contact, email } = req.body
     const data = {
       name,
       logo,
       location,
-      description
+      description,
+      no_contact,
+      email
     }
     const file = req.file
     if(file){

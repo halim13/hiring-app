@@ -65,6 +65,8 @@ module.exports = {
             location : engineers[i]['location'],
             date_of_birth : engineers[i]['date_of_birth'],
             showcases : dataShowcases,
+            no_contact : engineers[i]['no_contact'],
+            email : engineers[i]['email'],
             date_created : engineers[i]['date_created'],
             date_updated : engineers[i]['date_updated'],
           }
@@ -134,6 +136,8 @@ module.exports = {
             location : engineers[i]['location'],
             date_of_birth : engineers[i]['date_of_birth'],
             showcases : dataShowcases,
+            no_contact : engineers[i]['no_contact'],
+            email : engineers[i]['email'],
             date_created : engineers[i]['date_created'],
             date_updated : engineers[i]['date_updated'],
           }
@@ -158,13 +162,15 @@ module.exports = {
       })
   },
   addEngineer: (req, res) => {
-    const { name, description, skills, date_of_birth, location } = req.body
+    const { name, description, skills, date_of_birth, location, no_contact, email } = req.body
     const data = {
       name,
       description,
       skills,
       date_of_birth,
       location,
+      no_contact,
+      email,
       date_created:new Date(),
       date_updated:new Date()
     }
@@ -241,12 +247,14 @@ module.exports = {
   },
   updateEngineer: (req, res) => {
     const id = req.params.id
-    const { name, description, skills, date_of_birth } = req.body
+    const { name, description, skills, date_of_birth, no_contact, email } = req.body
     const data = {
       name,
       description,
       skills,
       date_of_birth,
+      no_contact,
+      email,
       date_updated:new Date()
     }
 
