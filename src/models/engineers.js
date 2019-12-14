@@ -23,11 +23,27 @@ module.exports = {
       })
     })
   },
-  getMessage: (company_id,engineer_id) => {
+  getMessage: (engineer_id, company_id) => {
     return new Promise((resolve, reject) => {
-      conn.query(`SELECT * FROM messages where engineer_id = ? and company_id = ? and sender = 'company'`,[company_id, engineer_id] ,(err, result) => {
+      conn.query(`SELECT * FROM messages where engineer_id = ? and company_id = ? and sender = 'company'`,[engineer_id, company_id] ,(err, result) => {
         if (!err) {
           resolve(result)
+        } else {
+          reject(new Error(err))
+        }
+      })
+    })
+  },
+  getCountEngineers: (search) => {
+    return new Promise((resolve, reject) => {
+
+      const queryTotal = `SELECT COUNT(*) AS totalEngineers FROM engineers
+      where name like '%${search}%' or skills like '%${search}%' or date_updated like '%${search}%'`
+
+      conn.query(queryTotal, (err, result) => {
+        if (!err) {
+          totalData = result[0].totalEngineers
+          resolve(totalData)
         } else {
           reject(new Error(err))
         }
@@ -42,51 +58,15 @@ module.exports = {
       const limit = data.limit
       const sort = data.sort
       let currentPage = parseInt(page)
-      let prevPage
-      let totalData
-      let totalPage
-      let nextPage
       const searchPage = (currentPage * limit) - limit
       const query = `SELECT * FROM engineers
       where 
         name like '%${search}%' or skills like '%${search}%' or date_updated like '%${search}%' 
       order by ${sort} ${order} limit ${searchPage}, ${limit}`
 
-      const queryTotal = `SELECT COUNT(*) AS totalEngineers FROM engineers
-      where name like '%${search}%' or skills like '%${search}%' or date_updated like '%${search}%'`
-
-      conn.query(queryTotal, (err, result) => {
-        if (!err) {
-          totalData = result[0].totalEngineers
-        } else {
-          reject(new Error(err))
-        }
-      })
-
       conn.query(query, (err, result) => {
         if (!err) {
-          totalPage = Math.ceil(totalData / limit)
-          if (page > totalPage) {
-            prevPage = totalPage
-          } else if (page > 1) {
-            prevPage = page - 1
-          } else {
-            currentPage = 1
-            prevPage = null
-          }
-          nextPage = page >= totalPage ? null : parseInt(page) + 1
-          const dataPage = {
-            prevPage,
-            currentPage,
-            nextPage,
-            totalData,
-            totalPage
-          }
-          const results = {
-            result,
-            dataPage
-          }
-          resolve(results)
+          resolve(result)
         } else {
           reject(new Error(err))
         }

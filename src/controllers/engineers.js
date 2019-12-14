@@ -1,5 +1,6 @@
 const engineersModels = require('../models/engineers')
 const showcasesModels = require('../models/showcases')
+const misc = require('./misc')
 
 module.exports = {
   getMessages: (req, res) => {
@@ -24,7 +25,7 @@ module.exports = {
   },
   sendMessage: (req, res) => {
     const data = {
-      engineer_id: req.body.company_id,
+      engineer_id: req.body.engineer_id,
       company_id: req.params.id,
       message: req.body.message,
       sender: 'engineer',
@@ -47,7 +48,20 @@ module.exports = {
     const order = req.query.order ? req.query.order : 'desc'
     const limit = req.query.limit ? req.query.limit : 2
     const sort = req.query.sort ? req.query.sort : 'name'
+    let totalData = 0
+    let totalPage = 0
     let all={}
+
+    engineersModels.getCountEngineers(search)
+      .then(result => {
+        totalData=result
+        totalPage = Math.ceil(totalData / limit)
+      })
+      .catch(err => {
+        console.log(err)
+        misc.response(res, 400, true, 'Something Wrong. Check console for more info!')
+      })
+
     const data={
       search,
       page,
@@ -82,7 +96,7 @@ module.exports = {
       showcasesModels.getShowcases()
       .then(result => {
         all.showcases = result
-        let engineers = all.engineers.result
+        let engineers = all.engineers
         let showcases = all.showcases
         let pages = all.engineers.dataPage
         let engineersData = []
@@ -92,6 +106,7 @@ module.exports = {
           let dataShowcases=[]
           var dataEngineer = {
             id : engineers[i]['id'],
+            user_id : engineers[i]['user_id'],
             name : engineers[i]['name'],
             description : engineers[i]['description'],
             skills : engineers[i]['skills'],
@@ -116,16 +131,19 @@ module.exports = {
           engineersData.push(dataEngineer)
         }
 
-        const prevPage = parseInt(page)-1
-        const nextPage = parseInt(page)+1
+        const prevPage = page <=1 ? '' : `http://localhost:3000${req.originalUrl.replace('page='+page,'page='+(parseInt(page)-1))}` 
+        const nextPage = page >=totalPage ? '' : `http://localhost:3000${req.originalUrl.replace('page='+page,'page='+(parseInt(page)+1))}`
+
         const pageDetail = {
           search: search,
+          totalData,
+          totalPage,
           page,
           limit,
           order,
           sort,
-          prevLink: `http://localhost:3000${req.originalUrl.replace('page='+page,'page='+prevPage)}`,
-          nextLink: `http://localhost:3000${req.originalUrl.replace('page='+page,'page='+nextPage)}`
+          prevLink: prevPage,
+          nextLink: nextPage
 
         }
 
@@ -177,6 +195,7 @@ module.exports = {
           let dataShowcases=[]
           var dataEngineer = {
             id : engineers[i]['id'],
+            user_id : engineers[i]['user_id'],
             name : engineers[i]['name'],
             description : engineers[i]['description'],
             skills : engineers[i]['skills'],
@@ -209,18 +228,30 @@ module.exports = {
       })
   },
   addEngineer: (req, res) => {
-    const { name, description, skills, date_of_birth, location, no_contact, email } = req.body
+    const file = req.file
+    if(!file){
+      return res.status(400).json({
+        status: 400,
+        error: true,
+        message: 'select an image'
+      })
+    }
+    const { user_id, name, photo, description, skills, date_of_birth, location, no_contact, email, expected_salary } = req.body
     const data = {
+      user_id,
       name,
+      photo,
       description,
       skills,
       date_of_birth,
       location,
       no_contact,
       email,
+      expected_salary,
       date_created:new Date(),
       date_updated:new Date()
     }
+    data['photo'] = file.filename
     engineersModels.addEngineer(data)
       .then(result => {
         const results=[{
