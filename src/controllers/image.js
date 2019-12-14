@@ -1,4 +1,5 @@
 
+const misc = require('./misc')
 const path = require('path')
 const multer = require('multer')
 const ImageCompanies = './src/images/companies/'

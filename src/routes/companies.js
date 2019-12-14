@@ -11,5 +11,8 @@ Route
   .patch('/company/:id', image.upload.single('logo'), companiesController.updateCompany)
   .put('/company/:id', image.upload.single('logo'), companiesController.updateCompany)
   .delete('/company/:id', companiesController.deleteCompany)
+  .post('/engineer/:id/message', companiesController.sendMessage)
+  .get('/company/:id/messages', companiesController.getMessages)
+  .get('/company/:id/message/:idEngineer', companiesController.getMessage)
 
 module.exports = Route

@@ -1,8 +1,8 @@
-const skillsModels = require('../models/skills')
+const usersModels = require('../models/users')
 
 module.exports = {
-  getSkills: (req, res) => {
-    skillsModels.getSkills()
+  getUsers: (req, res) => {
+    usersModels.getUsers()
       .then(result => {
         const results=[{
           'status':200,
@@ -22,10 +22,10 @@ module.exports = {
         console.log(err)
       })
   },
-  getSingleSkill: (req, res) => {
+  getSingleUser: (req, res) => {
     const id = req.params.id
 
-    skillsModels.getSingleSkill(id)
+    usersModels.getSingleUsers(id)
       .then(result => {
         const results=[{
           'status':200,
@@ -45,12 +45,14 @@ module.exports = {
         console.log(err)
       })
   },
-  addSkill: (req, res) => {
-    const { name } = req.body
+  addUser: (req, res) => {
+    const { username, password, role} = req.body
     const data = {
-      name
+      username,
+      password,
+      role
     }
-    skillsModels.addSkill(data)
+    usersModels.addUsers(data)
       .then(result => {
         const results=[{
           'status':201,
@@ -64,20 +66,22 @@ module.exports = {
         const results=[{
           'status':400,
           'error':true,
-          'message':'Something Wrong. Check console for more info!'
+          'message':err
         }]
         res.status(400).json(results)
         console.log(err)
       })
   },
-  updateSkill: (req, res) => {
+  updateUser: (req, res) => {
     const id = req.params.id
-    const { name } = req.body
+    const { username, password, role } = req.body
     const data = {
-      name
+      name,
+      password,
+      role
     }
 
-    skillsModels.updateSkill(data, id)
+    usersModels.updateUsers(data, id)
       .then(result => {
         const results=[{
           'status':201,
@@ -91,16 +95,16 @@ module.exports = {
         const results=[{
           'status':400,
           'error':true,
-          'message':'Something Wrong. Check console for more info!'
+          'message':err
         }]
         res.status(400).json(results)
         console.log(err)
       })
   },
-  deleteSkill: (req, res) => {
+  deleteUser: (req, res) => {
     const id = req.params.id
 
-    skillsModels.deleteSkill(id)
+    usersModels.deleteUsers(id)
       .then(result => {
         const results=[{
           'status':200,
@@ -113,7 +117,7 @@ module.exports = {
         const results=[{
           'status':400,
           'error':true,
-          'message':'Something Wrong. Check console for more info!'
+          'message':err
         }]
         res.status(400).json(results)
         console.log(err)

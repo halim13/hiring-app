@@ -1,27 +1,55 @@
 const companiesModels = require('../models/companies')
 const path = require('path')
 const fs = require('fs')
+const misc = require('./misc')
 
 module.exports = {
+  getMessages: (req, res) => {
+    companiesModels.getMessages(req.params.id)
+      .then(result => {
+        misc.response(res, 200, false, 'Success Get All Messages!',result)
+      })
+      .catch(err => {
+        console.log(err)
+        misc.response(res, 400, true, 'Something Wrong. Check console for more info!')
+      })
+  },
+  getMessage: (req, res) => {
+    companiesModels.getMessage(req.params.id,req.params.idEngineer)
+      .then(result => {
+        misc.response(res, 200, false, 'Success Get Message!',result)
+      })
+      .catch(err => {
+        console.log(err)
+        misc.response(res, 400, true, 'Something Wrong. Check console for more info!')
+      })
+  },
+  sendMessage: (req, res) => {
+    const data = {
+      company_id: req.body.company_id,
+      engineer_id: req.params.id,
+      message: req.body.message,
+      sender: 'company',
+      date_created: new Date(),
+      date_updated: new Date()
+    }
+    companiesModels.sendMessage(data)
+      .then(result => {
+        misc.response(res, 200, false, 'Success Send Message!',data)
+      })
+      .catch(err => {
+        console.log(err)
+        misc.response(res, 400, true, 'Something Wrong. Check console for more info!')
+      })
+  },
   getCompanies: (req, res) => {
     companiesModels.getCompanies()
       .then(result => {
-        const results=[{
-          'status':200,
-          'error':false,
-          'message':'Success Get All Data',
-          'data':result
-        }]
-        res.json(results)
+        misc.response(res, 200, false, 'Success Get All Data!',result)
       })
       .catch(err => {
-        const results=[{
-          'status':400,
-          'error':true,
-          'message':'Something Wrong. Check console for more info!'
-        }]
-        res.status(400).json(results)
         console.log(err)
+        misc.response(res, 400, true, 'Something Wrong. Check console for more info!')
       })
   },
   getSingleCompany: (req, res) => {
@@ -29,67 +57,83 @@ module.exports = {
 
     companiesModels.getSingleCompany(id)
       .then(result => {
-        const results=[{
-          'status':200,
-          'error':false,
-          'message':'Success Get Single Data',
-          'data':result
-        }]
-        res.json(results)
+        if(!result.length){
+          misc.response(res, 400, true, 'User Not Found!')
+        }
+        misc.response(res, 200, false, 'Success Get Single Data!', result)
       })
       .catch(err => {
-        const results=[{
-          'status':400,
-          'error':true,
-          'message':'Something Wrong. Check console for more info!'
-        }]
-        res.status(400).json(results)
         console.log(err)
+        misc.response(res, 400, true, 'Something went wrong, check console for more info!')
       })
   },
   addCompany: (req, res) => {
     const file = req.file
     if(!file){
-      res.status(400).json({
+      return res.status(400).json({
         status: 400,
         error: true,
         message: 'select an image'
       })
     }
-    const {name,logo,location,description,no_contact,email} = req.body
-    const data={name,logo,location,description,no_contact,email}
+    const {name,logo,location,description,no_contact,email, user_id} = req.body
+
+    if(!name || !location || !description || !no_contact || !email || !user_id){
+      misc.response(res, 400, true, 'fill all fields!')
+    }
+    let count=0
+
+    companiesModels.checkDuplication(user_id)
+    .then(result =>{
+      count = result[0].count
+    })
+
+    companiesModels.checkUser(user_id)
+    .then(result =>{
+      if(!result[0].count){
+        misc.response(res, 400, true, 'User not exist!')
+      }
+    })
+
+    const data={user_id, name, logo, location, description, no_contact, email, date_created: new Date(), date_updated: new Date()}
     data['logo'] = file.filename
     companiesModels.addCompany(data)
     .then(result => {
-      const results=[{
-        'status':201,
-        'error':false,
-        'message':'Success Add Data',
-        data
-      }]
-      res.json(results)
+      misc.response(res, 201, false, 'Success Add Data!', data)
     })
     .catch(err => {
-      const results=[{
-        'status':400,
-        'error':true,
-        'message':'Something Wrong. Check console for more info!'
-      }]
-      res.status(400).json(results)
       console.log(err)
+      if(count){
+        misc.response(res, 400, true, 'Company Exist!')
+      }
+      misc.response(res, 400, true, 'Something went wrong, check console for more info!')
     })
   },
   updateCompany: (req, res) => {
     const id = req.params.id
-    const { name, logo, location, description, old_logo, no_contact, email } = req.body
+    const { name, logo, location, description, old_logo, no_contact, email, user_id } = req.body
+
+    if(!name || !location || !description || !no_contact || !email || !user_id){
+      misc.response(res, 400, true, 'fill all fields!')
+    }
+
+    let count=0
+
+    companiesModels.checkDuplication(user_id)
+    .then(result =>{
+      count = result[0].count
+    })
+
     const data = {
       name,
       logo,
       location,
       description,
       no_contact,
-      email
+      email,
+      date_updated: new Date()
     }
+
     const file = req.file
     if(file){
       let filePath = './src/images/companies/'+old_logo; 
@@ -110,24 +154,16 @@ module.exports = {
       data['logo'] = old_logo
     }
 
-    companiesModels.updateCompany(data, id)
+    companiesModels.updateCompany(data, id, user_id)
       .then(result => {
-        const results=[{
-          'status':201,
-          'error':false,
-          'message':'Success Update Data',
-          data
-        }]
-        res.json(results)
+        if(!result.affectedRows){
+          misc.response(res, 400, true, 'user not found or company exist!')
+        }
+        misc.response(res, 201, false, 'Success Update Data!', data)
       })
       .catch(err => {
-        const results=[{
-          'status':400,
-          'error':true,
-          'message':'Something Wrong. Check console for more info!'
-        }]
-        res.status(400).json(results)
         console.log(err)
+        misc.response(res, 400, true, 'Something went wrong, check console for more info!')
       })
   },
   deleteCompany: (req, res) => {
@@ -144,28 +180,18 @@ module.exports = {
           } else if (err) {
               // other errors, e.g. maybe we don't have enough permission
               console.error("Error occurred while trying to remove file");
+              misc.response(res, 400, true, 'Something went wrong!',err)
           } else {
             // removed
             // fs.unlinkSync(filePath);
           }
         })
-        
-        const results=[{
-          'status':200,
-          'error':false,
-          'message':'Success Delete Data',
-          'data':result
-        }]
-        res.json(results)
+
+        misc.response(res, 200, false, 'Success Delete Data!')
       })
       .catch(err => {
-        const results=[{
-          'status':400,
-          'error':true,
-          'message':'Something Wrong. Check console for more info!'
-        }]
-        res.status(400).json(results)
         console.log(err)
+        misc.response(res, 400, true, 'Something went wrong, check console for more info!')
       })
   }
 }

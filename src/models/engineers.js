@@ -1,9 +1,41 @@
 const conn = require('../configs/db')
 
 module.exports = {
+  sendMessage: (data) => {
+    return new Promise((resolve, reject) => {
+      conn.query('INSERT INTO messages SET ?', data, (err, result) => {
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(new Error(err))
+        }
+      })
+    })
+  },
+  getMessages: (id) => {
+    return new Promise((resolve, reject) => {
+      conn.query(`SELECT * FROM messages where engineer_id = ? AND sender ='company'`,id ,(err, result) => {
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(new Error(err))
+        }
+      })
+    })
+  },
+  getMessage: (company_id,engineer_id) => {
+    return new Promise((resolve, reject) => {
+      conn.query(`SELECT * FROM messages where engineer_id = ? and company_id = ? and sender = 'company'`,[company_id, engineer_id] ,(err, result) => {
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(new Error(err))
+        }
+      })
+    })
+  },
   getEngineers: (data) => {
     return new Promise((resolve, reject) => {
-      const by = data.by
       const search = data.search
       const order = data.order
       const page = data.page
@@ -16,10 +48,12 @@ module.exports = {
       let nextPage
       const searchPage = (currentPage * limit) - limit
       const query = `SELECT * FROM engineers
-      where ${by} like '%${search}%' order by ${sort} ${order} limit ${searchPage}, ${limit}`
+      where 
+        name like '%${search}%' or skills like '%${search}%' or date_updated like '%${search}%' 
+      order by ${sort} ${order} limit ${searchPage}, ${limit}`
 
       const queryTotal = `SELECT COUNT(*) AS totalEngineers FROM engineers
-      where ${by} like '%${search}%'`
+      where name like '%${search}%' or skills like '%${search}%' or date_updated like '%${search}%'`
 
       conn.query(queryTotal, (err, result) => {
         if (!err) {
@@ -70,7 +104,7 @@ module.exports = {
       })
     })
   },
-  getMessages: (id) => {
+  getMessagesss: (id) => {
     return new Promise((resolve, reject) => {
       conn.query(`SELECT companies.name, companies.description, companies.location, 
             companies.logo, companies.no_contact, companies.email, messages_to_engineers.message

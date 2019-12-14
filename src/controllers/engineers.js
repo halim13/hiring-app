@@ -1,13 +1,47 @@
 const engineersModels = require('../models/engineers')
 const showcasesModels = require('../models/showcases')
-const skillsModels = require('../models/skills')
-const skillsOfEngineersModels = require('../models/skillsOfEngineers')
-const messagesToEngineersModels = require('../models/messagesToEngineers')
 
 module.exports = {
+  getMessages: (req, res) => {
+    engineersModels.getMessages(req.params.id)
+      .then(result => {
+        misc.response(res, 200, false, 'Success Get All Messages!',result)
+      })
+      .catch(err => {
+        console.log(err)
+        misc.response(res, 400, true, 'Something Wrong. Check console for more info!')
+      })
+  },
+  getMessage: (req, res) => {
+    engineersModels.getMessage(req.params.id,req.params.idCompany)
+      .then(result => {
+        misc.response(res, 200, false, 'Success Get Message!',result)
+      })
+      .catch(err => {
+        console.log(err)
+        misc.response(res, 400, true, 'Something Wrong. Check console for more info!')
+      })
+  },
+  sendMessage: (req, res) => {
+    const data = {
+      engineer_id: req.body.company_id,
+      company_id: req.params.id,
+      message: req.body.message,
+      sender: 'engineer',
+      date_created: new Date(),
+      date_updated: new Date()
+    }
+    engineersModels.sendMessage(data)
+      .then(result => {
+        misc.response(res, 200, false, 'Success Send Message!',data)
+      })
+      .catch(err => {
+        console.log(err)
+        misc.response(res, 400, true, 'Something Wrong. Check console for more info!')
+      })
+  },
   getEngineers: (req, res) => {
     // const {name, skill, page} = req.query
-    const by = req.query.by ? req.query.by : 'name'
     const search = req.query.search ? req.query.search : ''
     const page = req.query.page ? req.query.page : 1
     const order = req.query.order ? req.query.order : 'desc'
@@ -15,7 +49,6 @@ module.exports = {
     const sort = req.query.sort ? req.query.sort : 'name'
     let all={}
     const data={
-      by,
       search,
       page,
       order,
@@ -49,9 +82,9 @@ module.exports = {
       showcasesModels.getShowcases()
       .then(result => {
         all.showcases = result
-        let engineers = all['engineers']['result']
-        let showcases = all['showcases']
-        let pages = all['engineers']['dataPage']
+        let engineers = all.engineers.result
+        let showcases = all.showcases
+        let pages = all.engineers.dataPage
         let engineersData = []
         
         for(let i = 0; i < engineers.length; i++) {
@@ -64,9 +97,9 @@ module.exports = {
             skills : engineers[i]['skills'],
             location : engineers[i]['location'],
             date_of_birth : engineers[i]['date_of_birth'],
-            showcases : dataShowcases,
             no_contact : engineers[i]['no_contact'],
             email : engineers[i]['email'],
+            showcases : dataShowcases,
             date_created : engineers[i]['date_created'],
             date_updated : engineers[i]['date_updated'],
           }
@@ -83,8 +116,22 @@ module.exports = {
           engineersData.push(dataEngineer)
         }
 
+        const prevPage = parseInt(page)-1
+        const nextPage = parseInt(page)+1
+        const pageDetail = {
+          search: search,
+          page,
+          limit,
+          order,
+          sort,
+          prevLink: `http://localhost:3000${req.originalUrl.replace('page='+page,'page='+prevPage)}`,
+          nextLink: `http://localhost:3000${req.originalUrl.replace('page='+page,'page='+nextPage)}`
+
+        }
+
         const getAll={
-          pages,
+          pageDetail,
+          // pages,
           engineersData
         }
 
