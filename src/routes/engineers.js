@@ -3,6 +3,7 @@ const Route = express.Router()
 const image = require('../controllers/photoEngineer')
 
 const engineersController = require('../controllers/engineers')
+// const auth = require('../helpers/authCheck.js')
 
 Route
   .get('/engineers/', engineersController.getEngineers)

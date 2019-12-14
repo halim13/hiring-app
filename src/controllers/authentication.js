@@ -1,9 +1,9 @@
 const authenticationModels = require('../models/authentication')
 const misc = require('./misc')
+const JWT = require('jsonwebtoken')
 
 module.exports = {
   login: (req, res) => {
-
     const { username, password } = req.body
     if(!username || !password){
       misc.response(res, 400, true, 'Username and password cannot be null!')
@@ -11,9 +11,28 @@ module.exports = {
 
     authenticationModels.login(username, password)
       .then(result => {
+        const role = result.role
+        const id = result.id
+        const name = result.name
         if(result.length===0){
           misc.response(res, 400, true, 'No data found!', req.body)
         }
+
+        // signing JWT token
+        const token = JWT.sign(
+          // payload/data
+          {
+            username,
+            role,
+            id,
+            name
+          },
+          process.env.SECRET_KEY,
+          // options
+          {
+            expiresIn: '1h'
+          }
+        )
         misc.response(res, 200, false, 'Success Login!',result)
       })
       .catch(err => {

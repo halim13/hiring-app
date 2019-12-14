@@ -1,6 +1,9 @@
 const engineersModels = require('../models/engineers')
 const showcasesModels = require('../models/showcases')
 const misc = require('./misc')
+// const redis = require('redis')
+// const client = redis.createClient()
+
 
 module.exports = {
   getMessages: (req, res) => {
@@ -51,6 +54,9 @@ module.exports = {
     let totalData = 0
     let totalPage = 0
     let all={}
+
+    // set key for redis
+    // const key = `get-engineers-all-${search}-${page}-${limit}-${sort}-${order}`
 
     engineersModels.getCountEngineers(search)
       .then(result => {
