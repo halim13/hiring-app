@@ -384,7 +384,7 @@ module.exports = {
         })
       }
       const id = decoded.id
-      data['user_id'] = id
+      // data['user_id'] = id
     })
 
     data['photo'] = file.filename
