@@ -1,3 +1,4 @@
+require('dotenv/config') // get env value
 const companiesModels = require('../models/companies')
 const path = require('path')
 const fs = require('fs')
@@ -98,6 +99,14 @@ module.exports = {
     companiesModels
       .getCompanies()
       .then(result => {
+        result.forEach((element, index) => {
+          result[index].logo =
+            process.env.BASE_URL +
+            ':' +
+            process.env.PORT +
+            '/companies/' +
+            element.logo
+        })
         const key = 'companies'
         client.setex(key, 3600, JSON.stringify(result))
         client.get(key, (err, data) => {
@@ -135,6 +144,14 @@ module.exports = {
         if (!result.length) {
           misc.response(res, 400, true, 'User Not Found!')
         }
+        result.forEach((element, index) => {
+          result[index].logo =
+            process.env.BASE_URL +
+            ':' +
+            process.env.PORT +
+            '/companies/' +
+            element.logo
+        })
 
         const key = 'getCompany' + id
         client.setex(key, 3600, JSON.stringify(result))

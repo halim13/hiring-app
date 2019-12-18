@@ -5,6 +5,8 @@ const misc = require('./misc')
 const redis = require('redis')
 const client = redis.createClient()
 const JWT = require('jsonwebtoken')
+const port = process.env.PORT
+const base_url = process.env.BASE_URL
 
 module.exports = {
   getMessages: (req, res) => {
@@ -99,7 +101,7 @@ module.exports = {
     // const {name, skill, page} = req.query
     const search = req.query.search ? req.query.search : ''
     const page = req.query.page ? req.query.page : 1
-    const order = req.query.order ? req.query.order : 'desc'
+    const order = req.query.order ? req.query.order : 'asc'
     const limit = req.query.limit ? req.query.limit : 2
     const sort = req.query.sort ? req.query.sort : 'name'
     let totalData = 0
@@ -173,13 +175,21 @@ module.exports = {
         var dataEngineer = {
           id: engineers[i]['id'],
           user_id: engineers[i]['user_id'],
+          photo:
+            process.env.BASE_URL +
+            ':' +
+            process.env.PORT +
+            '/engineers/' +
+            engineers[i]['photo'],
           name: engineers[i]['name'],
           description: engineers[i]['description'],
+          specialist: engineers[i]['specialist'],
           skills: engineers[i]['skills'],
           location: engineers[i]['location'],
           date_of_birth: engineers[i]['date_of_birth'],
           no_contact: engineers[i]['no_contact'],
           email: engineers[i]['email'],
+          expected_salary: engineers[i]['expected_salary'],
           showcases: dataShowcases,
           date_created: engineers[i]['date_created'],
           date_updated: engineers[i]['date_updated']
@@ -200,14 +210,14 @@ module.exports = {
       const prevPage =
         page <= 1
           ? ''
-          : `http://localhost:4000${req.originalUrl.replace(
+          : `${base_url}:${port}${req.originalUrl.replace(
               'page=' + page,
               'page=' + (parseInt(page) - 1)
             )}`
       const nextPage =
         page >= totalPage
           ? ''
-          : `http://localhost:4000${req.originalUrl.replace(
+          : `${base_url}:${port}${req.originalUrl.replace(
               'page=' + page,
               'page=' + (parseInt(page) + 1)
             )}`
@@ -288,14 +298,22 @@ module.exports = {
         var dataEngineer = {
           id: engineers[i]['id'],
           user_id: engineers[i]['user_id'],
+          photo:
+            process.env.BASE_URL +
+            ':' +
+            process.env.PORT +
+            '/engineers/' +
+            engineers[i]['photo'],
           name: engineers[i]['name'],
           description: engineers[i]['description'],
+          specialist: engineers[i]['specialist'],
           skills: engineers[i]['skills'],
           location: engineers[i]['location'],
           date_of_birth: engineers[i]['date_of_birth'],
           showcases: dataShowcases,
           no_contact: engineers[i]['no_contact'],
           email: engineers[i]['email'],
+          expected_salary: engineers[i]['expected_salary'],
           date_created: engineers[i]['date_created'],
           date_updated: engineers[i]['date_updated']
         }
@@ -317,14 +335,14 @@ module.exports = {
       }
 
       const key = 'getEngineer' + id
-      client.setex(key, 3600, JSON.stringify(result))
+      client.setex(key, 3600, JSON.stringify(getAll))
       client.get(key, (err, data) => {
         if (err) throw err
 
         if (data !== null) {
           res.json(JSON.parse(data))
         } else {
-          client.setex(key, 3600, JSON.stringify(result))
+          client.setex(key, 3600, JSON.stringify(getAll))
         }
       })
     })
@@ -348,6 +366,7 @@ module.exports = {
       location,
       no_contact,
       email,
+      specialist,
       expected_salary
     } = req.body
     const data = {
@@ -360,6 +379,7 @@ module.exports = {
       location,
       no_contact,
       email,
+      specialist,
       expected_salary,
       date_created: new Date(),
       date_updated: new Date()
@@ -493,7 +513,8 @@ module.exports = {
       skills,
       date_of_birth,
       no_contact,
-      email
+      email,
+      specialist
     } = req.body
     const data = {
       name,
@@ -502,6 +523,7 @@ module.exports = {
       date_of_birth,
       no_contact,
       email,
+      specialist,
       date_updated: new Date()
     }
 

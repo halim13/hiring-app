@@ -1,4 +1,7 @@
 const usersModels = require('../models/users')
+const redis = require('redis')
+const client = redis.createClient()
+const misc = require('./misc')
 
 module.exports = {
   getUsers: (req, res) => {
@@ -20,8 +23,13 @@ module.exports = {
           if (err) throw err
 
           if (data !== null) {
-            misc.response(res, 200, false, 'Success Get Single Data!', data)
-            res.json(JSON.parse(data))
+            misc.response(
+              res,
+              200,
+              false,
+              'Success Get Single Data!',
+              JSON.parse(data)
+            )
           } else {
             client.setex(key, 3600, JSON.stringify(results))
           }
@@ -43,7 +51,7 @@ module.exports = {
     const id = req.params.id
 
     usersModels
-      .getSingleUsers(id)
+      .getSingleUser(id)
       .then(result => {
         const results = [
           {
