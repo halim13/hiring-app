@@ -2,22 +2,27 @@ const showcasesModels = require('../models/showcases')
 
 module.exports = {
   getShowcases: (req, res) => {
-    showcasesModels.getShowcases()
+    showcasesModels
+      .getShowcases()
       .then(result => {
-        const results=[{
-          'status':200,
-          'error':false,
-          'message':'Success Get All Data',
-          'data':result
-        }]
+        const results = [
+          {
+            status: 200,
+            error: false,
+            message: 'Success Get All Data',
+            data: result
+          }
+        ]
         res.json(results)
       })
       .catch(err => {
-        const results=[{
-          'status':400,
-          'error':true,
-          'message':'Something Wrong. Check console for more info!'
-        }]
+        const results = [
+          {
+            status: 400,
+            error: true,
+            message: 'Something Wrong. Check console for more info!'
+          }
+        ]
         res.status(400).json(results)
         console.log(err)
       })
@@ -25,49 +30,61 @@ module.exports = {
   getSingleShowcase: (req, res) => {
     const id = req.params.id
 
-    showcasesModels.getSingleShowcase(id)
+    showcasesModels
+      .getSingleShowcase(id)
       .then(result => {
-        const results=[{
-          'status':200,
-          'error':false,
-          'message':'Success Get Single Data',
-          'data':result
-        }]
+        const results = [
+          {
+            status: 200,
+            error: false,
+            message: 'Success Get Single Data',
+            data: result
+          }
+        ]
         res.json(results)
       })
       .catch(err => {
-        const results=[{
-          'status':400,
-          'error':true,
-          'message':'Something Wrong. Check console for more info!'
-        }]
+        const results = [
+          {
+            status: 400,
+            error: true,
+            message: 'Something Wrong. Check console for more info!'
+          }
+        ]
         res.status(400).json(results)
         console.log(err)
       })
   },
   addShowcase: (req, res) => {
-    const { name, link, engineer_id} = req.body
+    const { name, link, engineer_id } = req.body
     const data = {
       name,
       link,
-      engineer_id
+      engineer_id,
+      date_created: new Date(),
+      date_updated: new Date()
     }
-    showcasesModels.addShowcase(data)
+    showcasesModels
+      .addShowcase(data)
       .then(result => {
-        const results=[{
-          'status':201,
-          'error':false,
-          'message':'Success Add Data',
-          data
-        }]
+        const results = [
+          {
+            status: 201,
+            error: false,
+            message: 'Success Add Data',
+            data
+          }
+        ]
         res.json(results)
       })
       .catch(err => {
-        const results=[{
-          'status':400,
-          'error':true,
-          'message':'Something Wrong. Check console for more info!'
-        }]
+        const results = [
+          {
+            status: 400,
+            error: true,
+            message: 'Something Wrong. Check console for more info!'
+          }
+        ]
         res.status(400).json(results)
         console.log(err)
       })
@@ -78,25 +95,31 @@ module.exports = {
     const data = {
       name,
       link,
-      engineer_id
+      engineer_id,
+      date_updated: new Date()
     }
 
-    showcasesModels.updateShowcase(data, id)
+    showcasesModels
+      .updateShowcase(data, id)
       .then(result => {
-        const results=[{
-          'status':201,
-          'error':false,
-          'message':'Success Update Data',
-          data
-        }]
+        const results = [
+          {
+            status: 201,
+            error: false,
+            message: 'Success Update Data',
+            data
+          }
+        ]
         res.json(results)
       })
       .catch(err => {
-        const results=[{
-          'status':400,
-          'error':true,
-          'message':'Something Wrong. Check console for more info!'
-        }]
+        const results = [
+          {
+            status: 400,
+            error: true,
+            message: 'Something Wrong. Check console for more info!'
+          }
+        ]
         res.status(400).json(results)
         console.log(err)
       })
@@ -104,21 +127,26 @@ module.exports = {
   deleteShowcase: (req, res) => {
     const id = req.params.id
 
-    showcasesModels.deleteShowcase(id)
+    showcasesModels
+      .deleteShowcase(id)
       .then(result => {
-        const results=[{
-          'status':200,
-          'error':false,
-          'message':'Success Delete Data'
-        }]
+        const results = [
+          {
+            status: 200,
+            error: false,
+            message: 'Success Delete Data'
+          }
+        ]
         res.json(results)
       })
       .catch(err => {
-        const results=[{
-          'status':400,
-          'error':true,
-          'message':'Something Wrong. Check console for more info!'
-        }]
+        const results = [
+          {
+            status: 400,
+            error: true,
+            message: 'Something Wrong. Check console for more info!'
+          }
+        ]
         res.status(400).json(results)
         console.log(err)
       })
