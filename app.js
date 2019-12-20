@@ -2,8 +2,8 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const configs = require('./src/configs/configs')
 const logger = require('morgan')
-const cors = require('cors')
-const allowedOrigins = ['http://localhost:8000']
+// const cors = require('cors')
+// const allowedOrigins = ['http://localhost:8000']
 
 const app = express()
 const port = configs.port
