@@ -1,7 +1,7 @@
 const conn = require('../configs/db')
 
 module.exports = {
-  sendMessage: (data) => {
+  sendMessage: data => {
     return new Promise((resolve, reject) => {
       conn.query('INSERT INTO messages SET ?', data, (err, result) => {
         if (!err) {
@@ -12,31 +12,38 @@ module.exports = {
       })
     })
   },
-  getMessages: (id) => {
+  getMessages: id => {
     return new Promise((resolve, reject) => {
-      conn.query(`SELECT * FROM messages where engineer_id = ? AND sender ='company'`,id ,(err, result) => {
-        if (!err) {
-          resolve(result)
-        } else {
-          reject(new Error(err))
+      conn.query(
+        `SELECT * FROM messages where engineer_id = ? AND sender ='company'`,
+        id,
+        (err, result) => {
+          if (!err) {
+            resolve(result)
+          } else {
+            reject(new Error(err))
+          }
         }
-      })
+      )
     })
   },
   getMessage: (engineer_id, company_id) => {
     return new Promise((resolve, reject) => {
-      conn.query(`SELECT * FROM messages where engineer_id = ? and company_id = ? and sender = 'company'`,[engineer_id, company_id] ,(err, result) => {
-        if (!err) {
-          resolve(result)
-        } else {
-          reject(new Error(err))
+      conn.query(
+        `SELECT * FROM messages where engineer_id = ? and company_id = ? and sender = 'company'`,
+        [engineer_id, company_id],
+        (err, result) => {
+          if (!err) {
+            resolve(result)
+          } else {
+            reject(new Error(err))
+          }
         }
-      })
+      )
     })
   },
-  getCountEngineers: (search) => {
+  getCountEngineers: search => {
     return new Promise((resolve, reject) => {
-
       const queryTotal = `SELECT COUNT(*) AS totalEngineers FROM engineers
       where name like '%${search}%' or skills like '%${search}%' or date_updated like '%${search}%'`
 
@@ -50,7 +57,7 @@ module.exports = {
       })
     })
   },
-  getEngineers: (data) => {
+  getEngineers: data => {
     return new Promise((resolve, reject) => {
       const search = data.search
       const order = data.order
@@ -58,7 +65,7 @@ module.exports = {
       const limit = data.limit
       const sort = data.sort
       let currentPage = parseInt(page)
-      const searchPage = (currentPage * limit) - limit
+      const searchPage = currentPage * limit - limit
       const query = `SELECT * FROM engineers
       where 
         name like '%${search}%' or skills like '%${search}%' or date_updated like '%${search}%' 
@@ -73,7 +80,7 @@ module.exports = {
       })
     })
   },
-  getSingleEngineer: (id) => {
+  getSingleEngineer: id => {
     return new Promise((resolve, reject) => {
       conn.query('SELECT * FROM engineers WHERE id = ?', id, (err, result) => {
         if (!err) {
@@ -84,22 +91,26 @@ module.exports = {
       })
     })
   },
-  getMessagesss: (id) => {
+  getMessagesss: id => {
     return new Promise((resolve, reject) => {
-      conn.query(`SELECT companies.name, companies.description, companies.location, 
+      conn.query(
+        `SELECT companies.name, companies.description, companies.location, 
             companies.logo, companies.no_contact, companies.email, messages_to_engineers.message
           FROM companies JOIN messages_to_engineers 
             ON companies.id = messages_to_engineers.company_id
-          WHERE messages_to_engineers.engineer_id = ?`, id, (err, result) => {
-        if (!err) {
-          resolve(result)
-        } else {
-          reject(new Error(err))
+          WHERE messages_to_engineers.engineer_id = ?`,
+        id,
+        (err, result) => {
+          if (!err) {
+            resolve(result)
+          } else {
+            reject(new Error(err))
+          }
         }
-      })
+      )
     })
   },
-  addEngineer: (data) => {
+  addEngineer: data => {
     return new Promise((resolve, reject) => {
       conn.query('INSERT INTO engineers SET ?', data, (err, result) => {
         if (!err) {
@@ -112,16 +123,20 @@ module.exports = {
   },
   updateEngineer: (data, id) => {
     return new Promise((resolve, reject) => {
-      conn.query('UPDATE engineers SET ? WHERE id = ?', [data, id], (err, result) => {
-        if (!err) {
-          resolve(result)
-        } else {
-          reject(new Error(err))
+      conn.query(
+        'UPDATE engineers SET ? WHERE id = ?',
+        [data, id],
+        (err, result) => {
+          if (!err) {
+            resolve(result)
+          } else {
+            reject(new Error(err))
+          }
         }
-      })
+      )
     })
   },
-  deleteEngineer: (id) => {
+  deleteEngineer: id => {
     return new Promise((resolve, reject) => {
       conn.query('DELETE FROM engineers WHERE id = ?', id, (err, result) => {
         if (!err) {
