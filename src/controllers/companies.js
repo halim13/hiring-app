@@ -5,6 +5,8 @@ const fs = require('fs')
 const misc = require('./misc')
 const redis = require('redis')
 const client = redis.createClient()
+const port = process.env.PORT
+const base_url = process.env.BASE_URL
 
 module.exports = {
   getMessages: (req, res) => {
@@ -96,9 +98,69 @@ module.exports = {
       })
   },
   getCompanies: (req, res) => {
+    const search = req.query.search ? req.query.search : ''
+    const page = req.query.page ? req.query.page : 1
+    const order = req.query.order ? req.query.order : 'asc'
+    const limit = req.query.limit ? req.query.limit : 5
+    const sort = req.query.sort ? req.query.sort : 'name'
+    let totalData = 0
+    let totalPage = 0
+    // set key for redis
+    const key = `get-companies-all-${search}-${page}-${limit}-${sort}-${order}`
+
     companiesModels
-      .getCompanies()
+      .getCountCompanies(search)
       .then(result => {
+        totalData = result
+        totalPage = Math.ceil(totalData / limit)
+      })
+      .catch(err => {
+        console.log(err)
+        misc.response(
+          res,
+          400,
+          true,
+          'Something Wrong. Check console for more info!'
+        )
+      })
+
+    const data = {
+      search,
+      page,
+      order,
+      limit,
+      sort
+    }
+    companiesModels
+      .getCompanies(data)
+      .then(result => {
+        const prevPage =
+          page <= 1
+            ? ''
+            : `${base_url}:${port}${req.originalUrl.replace(
+                'page=' + page,
+                'page=' + (parseInt(page) - 1)
+              )}`
+        const nextPage =
+          page >= totalPage
+            ? ''
+            : `${base_url}:${port}${req.originalUrl.replace(
+                'page=' + page,
+                'page=' + (parseInt(page) + 1)
+              )}`
+
+        const pageDetail = {
+          search: search,
+          totalData,
+          totalPage,
+          page,
+          limit,
+          order,
+          sort,
+          prevLink: prevPage,
+          nextLink: nextPage
+        }
+
         result.forEach((element, index) => {
           result[index].logo =
             process.env.BASE_URL +
@@ -107,8 +169,17 @@ module.exports = {
             '/companies/' +
             element.logo
         })
-        const key = 'companies'
-        client.setex(key, 3600, JSON.stringify(result))
+        const results = [
+          {
+            status: 200,
+            error: false,
+            message: 'Success Get All Data',
+            dataPage: pageDetail,
+            data: result
+          }
+        ]
+        // const key = 'companies'
+        client.setex(key, 3600, JSON.stringify(results))
         client.get(key, (err, data) => {
           if (err) throw err
 
@@ -121,7 +192,7 @@ module.exports = {
               JSON.parse(data)
             )
           } else {
-            client.setex(key, 3600, JSON.stringify(result))
+            client.setex(key, 3600, JSON.stringify(results))
           }
         })
       })

@@ -195,7 +195,7 @@ module.exports = {
           date_updated: engineers[i]['date_updated']
         }
         for (let j = 0; j < showcases.length; j++) {
-          if (engineers[i]['id'] == showcases[j]['engineer_id']) {
+          if (engineers[i]['user_id'] == showcases[j]['engineer_id']) {
             var dataShowcase = {
               id: showcases[j]['id'],
               name: showcases[j]['name'],
