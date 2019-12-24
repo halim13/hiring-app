@@ -82,13 +82,17 @@ module.exports = {
   },
   getSingleEngineer: id => {
     return new Promise((resolve, reject) => {
-      conn.query('SELECT * FROM engineers WHERE id = ?', id, (err, result) => {
-        if (!err) {
-          resolve(result)
-        } else {
-          reject(new Error(err))
+      conn.query(
+        'SELECT * FROM engineers WHERE user_id = ?',
+        id,
+        (err, result) => {
+          if (!err) {
+            resolve(result)
+          } else {
+            reject(new Error(err))
+          }
         }
-      })
+      )
     })
   },
   getMessagesss: id => {

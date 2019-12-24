@@ -87,6 +87,21 @@ module.exports = {
       })
     })
   },
+  getCheckUser: id => {
+    return new Promise((resolve, reject) => {
+      const queryTotal = `SELECT COUNT(*) AS checkUser FROM companies
+      where user_id = '${id}'`
+
+      conn.query(queryTotal, (err, result) => {
+        if (!err) {
+          totalData = result[0].checkUser
+          resolve(totalData)
+        } else {
+          reject('no User')
+        }
+      })
+    })
+  },
   getCompanies: data => {
     return new Promise((resolve, reject) => {
       const search = data.search
@@ -113,13 +128,17 @@ module.exports = {
   },
   getSingleCompany: id => {
     return new Promise((resolve, reject) => {
-      conn.query('SELECT * FROM companies WHERE id = ?', id, (err, result) => {
-        if (!err) {
-          resolve(result)
-        } else {
-          reject(new Error(err))
+      conn.query(
+        'SELECT * FROM companies WHERE user_id = ?',
+        id,
+        (err, result) => {
+          if (!err) {
+            resolve(result)
+          } else {
+            reject(new Error(err))
+          }
         }
-      })
+      )
     })
   },
   addCompany: data => {

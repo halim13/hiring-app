@@ -13,7 +13,7 @@ module.exports = {
             data: result
           }
         ]
-        res.json(results)
+        return res.json(results)
       })
       .catch(err => {
         const results = [
@@ -23,8 +23,8 @@ module.exports = {
             message: 'Something Wrong. Check console for more info!'
           }
         ]
-        res.status(400).json(results)
         console.log(err)
+        return res.status(400).json(results)
       })
   },
   getSingleShowcase: (req, res) => {
@@ -41,7 +41,7 @@ module.exports = {
             data: result
           }
         ]
-        res.json(results)
+        return res.json(results)
       })
       .catch(err => {
         const results = [
@@ -51,8 +51,9 @@ module.exports = {
             message: 'Something Wrong. Check console for more info!'
           }
         ]
-        res.status(400).json(results)
         console.log(err)
+        return res.status(400).json(results)
+        
       })
   },
   addShowcase: (req, res) => {
@@ -75,7 +76,7 @@ module.exports = {
             data
           }
         ]
-        res.json(results)
+        return res.json(results)
       })
       .catch(err => {
         const results = [
@@ -85,8 +86,9 @@ module.exports = {
             message: 'Something Wrong. Check console for more info!'
           }
         ]
-        res.status(400).json(results)
         console.log(err)
+        return res.status(400).json(results)
+        
       })
   },
   updateShowcase: (req, res) => {
@@ -110,7 +112,7 @@ module.exports = {
             data
           }
         ]
-        res.json(results)
+        return res.json(results)
       })
       .catch(err => {
         const results = [
@@ -120,8 +122,9 @@ module.exports = {
             message: 'Something Wrong. Check console for more info!'
           }
         ]
-        res.status(400).json(results)
         console.log(err)
+        return res.status(400).json(results)
+       
       })
   },
   deleteShowcase: (req, res) => {
@@ -137,7 +140,7 @@ module.exports = {
             message: 'Success Delete Data'
           }
         ]
-        res.json(results)
+        return res.json(results)
       })
       .catch(err => {
         const results = [
@@ -147,8 +150,9 @@ module.exports = {
             message: 'Something Wrong. Check console for more info!'
           }
         ]
-        res.status(400).json(results)
         console.log(err)
+        return res.status(400).json(results)
+        
       })
   }
 }

@@ -1,4 +1,6 @@
 const authenticationModels = require('../models/authentication')
+const engineersModels = require('../models/engineers')
+const companiesModels = require('../models/companies')
 const misc = require('./misc')
 const JWT = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
@@ -7,13 +9,11 @@ module.exports = {
   login: async (req, res) => {
     let passwordUser = ''
     const { username, password } = req.body
-    if (!username || !password) {
-      return misc.response(
-        res,
-        400,
-        true,
-        'Username and password cannot be null!'
-      )
+    if (!username) {
+      return misc.response(res, 400, true, 'Username cannot be null!')
+    }
+    if (!password) {
+      return misc.response(res, 400, true, 'Password cannot be null!')
     }
     authenticationModels
       .getSingleData(username)
@@ -70,13 +70,14 @@ module.exports = {
   register: async (req, res) => {
     const { username, password, role } = req.body
     let count = 0
-    if (!username || !password || !role) {
-      return misc.response(
-        res,
-        400,
-        true,
-        'username, password and role cannot be null!'
-      )
+    if (!username) {
+      return misc.response(res, 400, true, 'Username cannot be null!')
+    }
+    if (!password) {
+      return misc.response(res, 400, true, 'Password cannot be null!')
+    }
+    if (!role) {
+      return misc.response(res, 400, true, 'Role cannot be null!')
     }
 
     const data = {
@@ -89,7 +90,7 @@ module.exports = {
 
     const salt = await bcrypt.genSalt(10)
     const hashedPassword = await bcrypt.hash(password, salt)
-    console.log(hashedPassword)
+    // console.log(hashedPassword)
     data.password = hashedPassword
 
     authenticationModels.checkDuplication(username).then(result => {
@@ -99,6 +100,45 @@ module.exports = {
     authenticationModels
       .register(data)
       .then(result => {
+        const id = result.insertId
+        const role = data.role
+        const datas = {
+          user_id: id,
+          date_created: new Date(),
+          date_updated: new Date()
+        }
+        if (role === 'engineer') {
+          engineersModels
+            .addEngineer(datas)
+            .then(result => {})
+            .catch(err => {
+              const results = [
+                {
+                  status: 400,
+                  error: true,
+                  message: 'Something Wrong. Check console for more info!'
+                }
+              ]
+              console.log(err)
+              return res.status(400).json(results)
+            })
+        } else if (role === 'company') {
+          companiesModels
+            .addCompany(datas)
+            .then(result => {})
+            .catch(err => {
+              const results = [
+                {
+                  status: 400,
+                  error: true,
+                  message: 'Something Wrong. Check console for more info!'
+                }
+              ]
+              console.log(err)
+              return res.status(400).json(results)
+            })
+        }
+
         return misc.response(res, 201, false, 'Success Register!', {
           username: data.username,
           role: data.role,

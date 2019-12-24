@@ -37,5 +37,6 @@ Route.get('/companies/', companiesController.getCompanies)
     auth.companyCheck,
     companiesController.getMessage
   )
+  .get('/company/:id/checkUser', companiesController.checkuser)
 
 module.exports = Route

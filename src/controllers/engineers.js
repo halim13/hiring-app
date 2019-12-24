@@ -19,7 +19,7 @@ module.exports = {
           if (err) throw err
 
           if (data !== null) {
-            misc.response(
+            return misc.response(
               res,
               200,
               false,
@@ -33,7 +33,7 @@ module.exports = {
       })
       .catch(err => {
         console.log(err)
-        misc.response(
+        return misc.response(
           res,
           400,
           true,
@@ -51,7 +51,7 @@ module.exports = {
           if (err) throw err
 
           if (data !== null) {
-            misc.response(
+            return misc.response(
               res,
               200,
               false,
@@ -65,7 +65,7 @@ module.exports = {
       })
       .catch(err => {
         console.log(err)
-        misc.response(
+        return misc.response(
           res,
           400,
           true,
@@ -85,11 +85,11 @@ module.exports = {
     engineersModels
       .sendMessage(data)
       .then(result => {
-        misc.response(res, 200, false, 'Success Send Message!', data)
+        return misc.response(res, 200, false, 'Success Send Message!', data)
       })
       .catch(err => {
         console.log(err)
-        misc.response(
+        return misc.response(
           res,
           400,
           true,
@@ -119,7 +119,7 @@ module.exports = {
       })
       .catch(err => {
         console.log(err)
-        misc.response(
+        return misc.response(
           res,
           400,
           true,
@@ -318,7 +318,7 @@ module.exports = {
           date_updated: engineers[i]['date_updated']
         }
         for (let j = 0; j < showcases.length; j++) {
-          if (engineers[i]['id'] == showcases[j]['engineer_id']) {
+          if (engineers[i]['user_id'] == showcases[j]['engineer_id']) {
             var dataShowcase = {
               id: showcases[j]['id'],
               name: showcases[j]['name'],

@@ -19,7 +19,7 @@ module.exports = {
           if (err) throw err
 
           if (data !== null) {
-            misc.response(
+            return misc.response(
               res,
               200,
               false,
@@ -33,7 +33,7 @@ module.exports = {
       })
       .catch(err => {
         console.log(err)
-        misc.response(
+        return misc.response(
           res,
           400,
           true,
@@ -51,7 +51,7 @@ module.exports = {
           if (err) throw err
 
           if (data !== null) {
-            misc.response(
+            return misc.response(
               res,
               200,
               false,
@@ -65,7 +65,7 @@ module.exports = {
       })
       .catch(err => {
         console.log(err)
-        misc.response(
+        return misc.response(
           res,
           400,
           true,
@@ -85,11 +85,11 @@ module.exports = {
     companiesModels
       .sendMessage(data)
       .then(result => {
-        misc.response(res, 200, false, 'Success Send Message!', data)
+        return misc.response(res, 200, false, 'Success Send Message!', data)
       })
       .catch(err => {
         console.log(err)
-        misc.response(
+        return misc.response(
           res,
           400,
           true,
@@ -116,7 +116,7 @@ module.exports = {
       })
       .catch(err => {
         console.log(err)
-        misc.response(
+        return misc.response(
           res,
           400,
           true,
@@ -184,7 +184,7 @@ module.exports = {
           if (err) throw err
 
           if (data !== null) {
-            misc.response(
+            return misc.response(
               res,
               200,
               false,
@@ -198,7 +198,7 @@ module.exports = {
       })
       .catch(err => {
         console.log(err)
-        misc.response(
+        return misc.response(
           res,
           400,
           true,
@@ -213,7 +213,7 @@ module.exports = {
       .getSingleCompany(id)
       .then(result => {
         if (!result.length) {
-          misc.response(res, 400, true, 'User Not Found!')
+          return misc.response(res, 400, true, 'User Not Found!')
         }
         result.forEach((element, index) => {
           result[index].logo =
@@ -230,7 +230,7 @@ module.exports = {
           if (err) throw err
 
           if (data !== null) {
-            misc.response(
+            return misc.response(
               res,
               200,
               false,
@@ -244,7 +244,27 @@ module.exports = {
       })
       .catch(err => {
         console.log(err)
-        misc.response(
+        return misc.response(
+          res,
+          400,
+          true,
+          'Something went wrong, check console for more info!'
+        )
+      })
+  },
+  checkuser: (req, res) => {
+    const id = req.params.id
+
+    companiesModels
+      .getCheckUser(id)
+      .then(result => {
+        if (!result.length) {
+          return misc.response(res, 400, true, 'User Not Found!')
+        }
+      })
+      .catch(err => {
+        // console.log(err)
+        return misc.response(
           res,
           400,
           true,
@@ -279,7 +299,7 @@ module.exports = {
       !email ||
       !user_id
     ) {
-      misc.response(res, 400, true, 'fill all fields!')
+      return misc.response(res, 400, true, 'fill all fields!')
     }
     let count = 0
 
@@ -289,7 +309,7 @@ module.exports = {
 
     companiesModels.checkUser(user_id).then(result => {
       if (!result[0].count) {
-        misc.response(res, 400, true, 'User not exist!')
+        return misc.response(res, 400, true, 'User not exist!')
       }
     })
 
@@ -308,14 +328,14 @@ module.exports = {
     companiesModels
       .addCompany(data)
       .then(result => {
-        misc.response(res, 201, false, 'Success Add Data!', data)
+        return misc.response(res, 201, false, 'Success Add Data!', data)
       })
       .catch(err => {
         console.log(err)
         if (count) {
-          misc.response(res, 400, true, 'Company Exist!')
+          return misc.response(res, 400, true, 'Company Exist!')
         }
-        misc.response(
+        return misc.response(
           res,
           400,
           true,
@@ -344,7 +364,7 @@ module.exports = {
       !email ||
       !user_id
     ) {
-      misc.response(res, 400, true, 'fill all fields!')
+      return misc.response(res, 400, true, 'fill all fields!')
     }
 
     let count = 0
@@ -387,13 +407,13 @@ module.exports = {
       .updateCompany(data, id, user_id)
       .then(result => {
         if (!result.affectedRows) {
-          misc.response(res, 400, true, 'user not found or company exist!')
+          return misc.response(res, 400, true, 'user not found or company exist!')
         }
-        misc.response(res, 201, false, 'Success Update Data!', data)
+        return misc.response(res, 201, false, 'Success Update Data!', data)
       })
       .catch(err => {
         console.log(err)
-        misc.response(
+        return misc.response(
           res,
           400,
           true,
@@ -416,18 +436,18 @@ module.exports = {
           } else if (err) {
             // other errors, e.g. maybe we don't have enough permission
             console.error('Error occurred while trying to remove file')
-            misc.response(res, 400, true, 'Something went wrong!', err)
+            return misc.response(res, 400, true, 'Something went wrong!', err)
           } else {
             // removed
             // fs.unlinkSync(filePath);
           }
         })
 
-        misc.response(res, 200, false, 'Success Delete Data!')
+        return misc.response(res, 200, false, 'Success Delete Data!')
       })
       .catch(err => {
         console.log(err)
-        misc.response(
+        return misc.response(
           res,
           400,
           true,
