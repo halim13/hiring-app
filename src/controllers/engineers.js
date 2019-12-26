@@ -299,10 +299,10 @@ module.exports = {
           id: engineers[i]['id'],
           user_id: engineers[i]['user_id'],
           photo:
-            process.env.BASE_URL +
-            ':' +
-            process.env.PORT +
-            '/engineers/' +
+            //process.env.BASE_URL +
+            //':' +
+            //process.env.PORT +
+            //'/engineers/' +
             engineers[i]['photo'],
           name: engineers[i]['name'],
           description: engineers[i]['description'],
