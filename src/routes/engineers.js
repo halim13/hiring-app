@@ -25,7 +25,9 @@ Route.get('/engineers/', engineersController.getEngineers)
     image.upload.single('photo'),
     engineersController.updateEngineer
   )
-  .delete('/engineer/:id', auth.adminCheck, engineersController.deleteEngineer)
+  .delete('/engineer/:id', 
+    // auth.adminCheck, 
+    engineersController.deleteEngineer)
   .post(
     '/company/:id/message',
     // auth.companyCheck,

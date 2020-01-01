@@ -128,7 +128,7 @@ module.exports = {
   updateEngineer: (data, id) => {
     return new Promise((resolve, reject) => {
       conn.query(
-        'UPDATE engineers SET ? WHERE id = ?',
+        'UPDATE engineers SET ? WHERE user_id = ?',
         [data, id],
         (err, result) => {
           if (!err) {
