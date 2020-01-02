@@ -69,7 +69,7 @@ module.exports = {
       const query = `SELECT * FROM engineers
       where 
         name like '%${search}%' or skills like '%${search}%' or date_updated like '%${search}%' 
-      order by ${sort} ${order} limit ${limit}, ${searchpage}`
+      order by ${sort} ${order} limit ${searchPage}, ${limit}`
 
       conn.query(query, (err, result) => {
         if (!err) {
