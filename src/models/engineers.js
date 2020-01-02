@@ -65,11 +65,11 @@ module.exports = {
       const limit = data.limit
       const sort = data.sort
       let currentPage = parseInt(page)
-      const searchPage = currentPage * limit - limit
+      const searchPage = (currentPage - limit) * limit
       const query = `SELECT * FROM engineers
       where 
         name like '%${search}%' or skills like '%${search}%' or date_updated like '%${search}%' 
-      order by ${sort} ${order} limit ${searchPage}, ${limit}`
+      order by ${sort} ${order} limit ${limit}, ${searchPage}`
 
       conn.query(query, (err, result) => {
         if (!err) {
