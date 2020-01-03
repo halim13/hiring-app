@@ -142,7 +142,7 @@ module.exports = {
   },
   deleteEngineer: id => {
     return new Promise((resolve, reject) => {
-      conn.query('DELETE FROM engineers WHERE id = ?', id, (err, result) => {
+      conn.query('DELETE FROM users WHERE id = ?', id, (err, result) => {
         if (!err) {
           resolve(result)
         } else {
