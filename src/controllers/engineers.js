@@ -514,6 +514,7 @@ module.exports = {
       date_of_birth,
       no_contact,
       email,
+      expected_salary,
       specialist
     } = req.body
     const data = {
@@ -523,6 +524,7 @@ module.exports = {
       date_of_birth,
       no_contact,
       email,
+      expected_salary,
       specialist,
       date_updated: new Date()
     }
