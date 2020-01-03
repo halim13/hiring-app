@@ -380,7 +380,7 @@ module.exports = {
       let filePath = './src/images/companies/' + old_logo;
       fs.unlink(filePath, function(err) {
         if (err && err.code == 'ENOENT') {
-          // file doens't exist
+          // file doesn't exist
           console.info("File doesn't exist, won't remove it.");
         } else if (err) {
           // other errors, e.g. maybe we don't have enough permission
@@ -428,7 +428,7 @@ module.exports = {
         let filePath = './src/images/companies/' + old_logo;
         fs.unlink(filePath, function(err) {
           if (err && err.code == 'ENOENT') {
-            // file doens't exist
+            // file doesn't exist
             console.info("File doesn't exist, won't remove it.");
           } else if (err) {
             // other errors, e.g. maybe we don't have enough permission
