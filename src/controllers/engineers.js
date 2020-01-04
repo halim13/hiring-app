@@ -1,6 +1,7 @@
 require('dotenv/config') // get env value
 const engineersModels = require('../models/engineers')
 const showcasesModels = require('../models/showcases')
+const fs = require('fs');
 const misc = require('./misc')
 const redis = require('redis')
 const client = redis.createClient()
@@ -515,7 +516,9 @@ module.exports = {
       no_contact,
       email,
       expected_salary,
-      specialist
+      specialist,
+      old_photo,
+      photo,
     } = req.body
     const data = {
       name,
@@ -526,7 +529,27 @@ module.exports = {
       email,
       expected_salary,
       specialist,
+      photo,
       date_updated: new Date()
+    }
+    const file = req.file;
+    if (file) {
+      let filePath = './src/images/engineers/' + old_photo;
+      fs.unlink(filePath, function(err) {
+        if (err && err.code == 'ENOENT') {
+          // file doesn't exist
+          console.info("File doesn't exist, won't remove it.");
+        } else if (err) {
+          // other errors, e.g. maybe we don't have enough permission
+          console.error('Error occurred while trying to remove file');
+        } else {
+          // removed
+          // fs.unlinkSync(filePath);
+        }
+      });
+      data['photo'] = file.filename;
+    } else {
+      data['photo'] = old_photo;
     }
 
     engineersModels
@@ -540,6 +563,7 @@ module.exports = {
             data
           }
         ]
+        res.json(results)
       })
       .catch(err => {
         const results = [
@@ -552,27 +576,28 @@ module.exports = {
         res.status(400).json(results)
         console.log(err)
       })
-
-      engineersModels
-      .getSingleEngineer(id)
-      .then(result => {
-        const results = [
-          {
-            status: 200,
-            error: false,
-            message: 'Success Update Data',
-            data: result
-          }
-        ]
-        res.json(results)
-      })
   },
   deleteEngineer: (req, res) => {
     const id = req.params.id
+    const old_logo = req.body.old_photo;
 
     engineersModels
       .deleteEngineer(id)
       .then(result => {
+        let filePath = './src/images/engineers/' + old_photo;
+        fs.unlink(filePath, function(err) {
+          if (err && err.code == 'ENOENT') {
+            // file doesn't exist
+            console.info("File doesn't exist, won't remove it.");
+          } else if (err) {
+            // other errors, e.g. maybe we don't have enough permission
+            console.error('Error occurred while trying to remove file');
+            return misc.response(res, 400, true, 'Something went wrong!', err);
+          } else {
+            // removed
+            // fs.unlinkSync(filePath);
+          }
+        });
         const results = [
           {
             status: 200,

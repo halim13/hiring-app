@@ -134,7 +134,7 @@ module.exports = {
           if (!err) {
             resolve(result)
           } else {
-            reject(err)
+            reject(new Error(err))
           }
         }
       )
