@@ -540,7 +540,6 @@ module.exports = {
             data
           }
         ]
-        res.json(results)
       })
       .catch(err => {
         const results = [
@@ -552,6 +551,20 @@ module.exports = {
         ]
         res.status(400).json(results)
         console.log(err)
+      })
+
+      engineersModels
+      .getSingleEngineer(id)
+      .then(result => {
+        const results = [
+          {
+            status: 200,
+            error: false,
+            message: 'Success Update Data',
+            data: result
+          }
+        ]
+        res.json(results)
       })
   },
   deleteEngineer: (req, res) => {
