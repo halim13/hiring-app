@@ -598,6 +598,7 @@ module.exports = {
             return misc.response(res, 400, true, 'Something went wrong!', err);
           } else {
             // removed
+            console.info("File removed.");
             // fs.unlinkSync(filePath);
           }
         });
