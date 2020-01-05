@@ -523,7 +523,6 @@ module.exports = {
     } = req.body
     const data = {
       name,
-      old_photo,
       description,
       skills,
       date_of_birth,
