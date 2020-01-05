@@ -523,6 +523,7 @@ module.exports = {
     } = req.body
     const data = {
       name,
+      old_photo,
       description,
       skills,
       date_of_birth,
@@ -546,6 +547,7 @@ module.exports = {
           console.error('Error occurred while trying to remove file');
         } else {
           // removed
+          console.info("File removed.");
           // fs.unlinkSync(filePath);
         }
       });
