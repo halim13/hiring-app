@@ -516,6 +516,7 @@ module.exports = {
       no_contact,
       email,
       expected_salary,
+      location,
       specialist,
       old_photo,
       photo,
@@ -530,6 +531,7 @@ module.exports = {
       expected_salary,
       specialist,
       photo,
+      location,
       date_updated: new Date()
     }
     const file = req.file;
