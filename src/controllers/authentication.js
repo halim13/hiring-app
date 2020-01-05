@@ -49,7 +49,7 @@ module.exports = {
           process.env.SECRET_KEY,
           // options
           {
-            expiresIn: '1h'
+            expiresIn: '1D'
           }
         )
         return misc.response(res, 200, false, 'Success Login!', {
