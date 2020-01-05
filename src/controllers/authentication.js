@@ -102,12 +102,21 @@ module.exports = {
       .then(result => {
         const id = result.insertId
         const role = data.role
-        const datas = {
-          user_id: id,
-          date_created: new Date(),
-          date_updated: new Date()
-        }
         if (role === 'engineer') {
+          const datas = {
+            user_id: id,
+            name: null,
+            specialist: null,
+            location: null,
+            date_of_birth: new Date(),
+            no_contact: null,
+            email: null,
+            skills: null,
+            expected_salary: 0,
+            description: null,
+            date_created: new Date(),
+            date_updated: new Date()
+          }
           engineersModels
             .addEngineer(datas)
             .then(result => {})
@@ -123,6 +132,16 @@ module.exports = {
               return res.status(400).json(results)
             })
         } else if (role === 'company') {
+          const datas = {
+            user_id: id,
+            name: null,
+            location: null,
+            no_contact: null,
+            email: null,
+            description: null,
+            date_created: new Date(),
+            date_updated: new Date()
+          }
           companiesModels
             .addCompany(datas)
             .then(result => {})
