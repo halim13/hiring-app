@@ -21,7 +21,7 @@ module.exports = {
         passwordUser = result[0].password
         const validPass = await bcrypt.compareSync(password, result[0].password)
         if (!validPass) {
-          return misc.response(res, 400, true, 'InvalidPassword!')
+          return misc.response(res, 400, true, 'Invalid Password!')
         }
       })
       .catch(err => {
