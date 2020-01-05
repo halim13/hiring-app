@@ -583,6 +583,7 @@ module.exports = {
   deleteEngineer: (req, res) => {
     const id = req.params.id
     const old_photo = req.body.old_photo;
+    console.log(req.body);
 
     engineersModels
       .deleteEngineer(id)
