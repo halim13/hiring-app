@@ -105,15 +105,7 @@ module.exports = {
         if (role === 'engineer') {
           const datas = {
             user_id: id,
-            name: null,
-            specialist: null,
-            location: null,
             date_of_birth: new Date(),
-            no_contact: null,
-            email: null,
-            skills: null,
-            expected_salary: 0,
-            description: null,
             date_created: new Date(),
             date_updated: new Date()
           }
@@ -134,11 +126,6 @@ module.exports = {
         } else if (role === 'company') {
           const datas = {
             user_id: id,
-            name: null,
-            location: null,
-            no_contact: null,
-            email: null,
-            description: null,
             date_created: new Date(),
             date_updated: new Date()
           }
