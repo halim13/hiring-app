@@ -591,7 +591,7 @@ module.exports = {
         fs.unlink(filePath, function(err) {
           if (err && err.code == 'ENOENT') {
             // file doesn't exist
-            console.info("File doesn't exist, won't remove it.");
+            console.info("File "+ old_photo + " doesn't exist, won't remove it.");
           } else if (err) {
             // other errors, e.g. maybe we don't have enough permission
             console.error('Error occurred while trying to remove file');
