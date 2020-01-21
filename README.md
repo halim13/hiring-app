@@ -1,36 +1,35 @@
-# Hiring Channel App
-
-![GitHub repo size](https://img.shields.io/github/repo-size/halim13/hiring-app)
-![GitHub stars](https://img.shields.io/github/stars/halim13/hiring-app?style=social)
-![GitHub forks](https://img.shields.io/github/forks/halim13/hiring-app?style=social)
-
-Hiring Channel App is a feature that allows Engineers and Company  to do communicate for looking/hiring jobs.
+<h1 align="center">ExpressJS - Simple Hiring Channel App RESTfull API</h1>
 
 
-This project write by Express JS with simple CRUD for engineer and company.
+Hiring Channel App is a feature that allows Engineers and Company  to do communicate for looking/hiring jobs. This project for handle backend only. Built using ExpressJs Framework.
+Express.js is a web application framework for Node.js. [More about Express](https://en.wikipedia.org/wiki/Express.js)
+## Built With
+[![Express.js](https://img.shields.io/badge/Express.js-4.x-orange.svg?style=rounded-square)](https://expressjs.com/en/starter/installing.html)
+[![Node.js](https://img.shields.io/badge/Node.js-v.10.16-green.svg?style=rounded-square)](https://nodejs.org/)
 
-## Prerequisites
+## Requirements
+1. <a href="https://nodejs.org/en/download/">Node Js</a>
+2. Node_modules
+3. <a href="https://www.getpostman.com/">Postman</a>
+4. Web Server (ex. localhost)
 
-Before you begin, ensure you have met the following requirements:
-* You have installed the latest version of node js.
-* you have Postman for testing the App.
-
-## Installing Hiring Channel App
-
-To install Hiring Channel App, follow these steps:
-
-Linux, Windows and macOS:
+## How to run the app ?
+To run Hiring Channel App, follow these steps:
 ```
+- open your terminal
 - git clone https://github.com/halim13/hiring-app.git
 - cd hiring-app
 - npm install
-- create database and import from .sql file in this project 
+- create database and import from .sql file in this project
 - cp .env.example .env
 - open .env file and fill the requirement
 - npm run start
+- Open Postman desktop application or Chrome web app extension that has installed before
+- Choose HTTP Method and enter request url.(ex. localhost:3000/companies)
+- You can see all the end point in routes folder
 ```
 
-## Contributing to <project_name>
+## Contributing to Hiring Channel App
 To contribute to Hiring Channel App, follow these steps:
 
 1. Fork this repository.
