@@ -3,7 +3,7 @@ const bodyParser = require('body-parser')
 const configs = require('./src/configs/configs')
 const logger = require('morgan')
 const cors = require('cors')
-const allowedOrigins = ['http://localhost:5000', 'http://192.168.1.25:5000']
+const allowedOrigins = ['*']
 
 const app = express()
 const port = configs.port
