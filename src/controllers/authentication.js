@@ -7,6 +7,7 @@ const bcrypt = require('bcryptjs')
 
 module.exports = {
   login: async (req, res) => {
+    console.log(req.body)
     let passwordUser = ''
     const { username, password } = req.body
     if (!username) {
